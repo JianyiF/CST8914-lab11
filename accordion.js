@@ -12,19 +12,27 @@
 const accordionBtns = document.querySelectorAll(".accordion");
 
 accordionBtns.forEach((accordion) => {
-  accordion.onclick = function () {
+  accordion.addEventListener("click", function () {
+    const isOpen = this.getAttribute("aria-expanded") === "true";
+    const content = this.nextElementSibling;
+
+    // Toggle the aria-expanded attribute
+    this.setAttribute("aria-expanded", !isOpen);
     this.classList.toggle("is-open");
 
-    let content = this.nextElementSibling;
-    console.log(content);
-
-    if (content.style.maxHeight) {
-      //this is if the accordion is open
-      content.style.maxHeight = null;
-    } else {
-      //if the accordion is currently closed
+    if (!isOpen) {
       content.style.maxHeight = content.scrollHeight + "px";
-      console.log(content.style.maxHeight);
+    } else {
+      content.style.maxHeight = null;
     }
-  };
+  });
+
+  // Make the accordion usable with keyboard
+  accordion.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      this.click();
+    }
+  });
 });
+  
